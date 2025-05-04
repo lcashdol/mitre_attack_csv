@@ -51,8 +51,8 @@ def minimd(s,fmt="text"):
 
 	code = re.compile('<code>(?P<codeblock>.*?)</code>')
 
-	bold = re.compile('\*\*(.*?)\*\*')
-	link = re.compile('\[([^[]*?)\]\((.*?)\)')
+	bold = re.compile(r'\*\*(.*?)\*\*')
+	link = re.compile(r'\[([^[]*?)\]\((.*?)\)')
 	header = re.compile('(?:^|\n)#+([^\n]*)')
 
 	if fmt=="html":
@@ -62,7 +62,7 @@ def minimd(s,fmt="text"):
 		s = header.sub(r'<b><u>\1</u></b><br/>',s)
 
 		# rewrite links to mitre page to this one (mitre to internal link)
-		mtil = re.compile('"https://attack.mitre.org/techniques/(?P<technique>.*?)"')
+		mtil = re.compile(r'"https://attack.mitre.org/techniques/(?P<technique>.*?)"')
 		s = mtil.sub(lambda x: '"#{}"'.format(x.group('technique').replace('/','.')), s)
 
 		s = s.replace('\n','<br/>')
@@ -75,7 +75,7 @@ def minimd(s,fmt="text"):
 		s = code.sub(lambda x: '`{}`'.format(x.group('codeblock')), s)
 
 		# rewrite links to mitre page to plaintext
-		mtil = re.compile('https://attack.mitre.org/(techniques|tactics|software)/(?P<technique>[^\])"]+)')
+		mtil = re.compile(r'https://attack.mitre.org/(techniques|tactics|software)/(?P<technique>[^\])"]+)')
 		s = mtil.sub(lambda x: '{}'.format(x.group('technique').replace('/','.')), s)
 
 		# remove <br>
